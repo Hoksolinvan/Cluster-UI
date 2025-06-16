@@ -52,7 +52,8 @@ def dbscan_clustering(params: DBSCANParams):
         result = clustering.DBSCAN(params.data,params.eps, params.min_samples)
 
 
-    return {"message": "DBSCAN clustering completed successfully." }
+    return {"message": "DBSCAN clustering completed successfully.",
+           "result":result}
 
 
 @app.post("/clustering/kmeans")
