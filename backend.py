@@ -51,10 +51,10 @@ def dbscan_clustering(params: DBSCANParams):
     elif(params.mode == "TPU"):
         result = clustering.DBSCAN(params.data,params.eps, params.min_samples)
 
-    
-    return {"message": "DBSCAN clustering completed successfully.",
-            "clusters": result
-    }
+
+    else:
+        return {"message": "DBSCAN clustering completed successfully."      
+        }
 
 
 @app.post("/clustering/kmeans")
