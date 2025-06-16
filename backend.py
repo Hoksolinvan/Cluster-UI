@@ -24,7 +24,8 @@ class DBSCANParams(BaseModel):
 class KMeansParams(BaseModel):
     data: list[list[float]]
     k: int
-    min_samples: int
+    #min_samples: int
+    max_iterations: int = 100
     mode: str
 
 class DataPoints(BaseModel):
