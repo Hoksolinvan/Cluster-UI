@@ -243,7 +243,7 @@ submit_button.addEventListener("click", () => {
 function sendData(data, algo, algoType, epsOrK, minPts) {
   const payload =
     algo === "KM"
-      ? { data, k: minPts, mode: algoType }
+      ? { data, k: minPts, min_samples:minPts, mode: algoType }
       : { data, eps: epsOrK, min_samples: minPts, mode: algoType };
 
   const url =
