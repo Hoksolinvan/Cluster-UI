@@ -48,8 +48,10 @@ def dbscan_clustering(params: DBSCANParams):
     
     elif(params.mode =="GPU"):
         result = clustering.CUML_DBSCAN(params.data,params.eps, params.min_samples)
-    else:
+    elif(params.mode == "TPU"):
         result = clustering.DBSCAN(params.data,params.eps, params.min_samples)
+
+    
     return {"message": "DBSCAN clustering completed successfully.",
             "clusters": result
     }
