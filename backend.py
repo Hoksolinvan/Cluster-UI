@@ -46,8 +46,8 @@ def dbscan_clustering(params: DBSCANParams):
     if(params.mode == "CPU"):
         result = clustering.Sci_kitDBSCAN(params.data,params.eps, params.min_samples)
     
-    elif(params.mode =="GPU"):
-        result = clustering.CUML_DBSCAN(params.data,params.eps, params.min_samples)
+    # elif(params.mode =="GPU"):
+    #     result = clustering.CUML_DBSCAN(params.data,params.eps, params.min_samples)
     else:
         result = clustering.DBSCAN(params.data,params.eps, params.min_samples)
 
@@ -66,8 +66,8 @@ def kmeans_clustering(params: KMeansParams):
     if(params.mode == "CPU"):
         result = clustering.Sci_kitKMeans(params.data, params.k, params.max_iterations)
     
-    elif(params.mode =="GPU"):
-        result = clustering.CUML_KMeans(params.data, params.k, params.max_iterations)
+    # elif(params.mode =="GPU"):
+    #     result = clustering.CUML_KMeans(params.data, params.k, params.max_iterations)
     else:
         result = clustering.KMeans(params.data, params.k, params.max_iterations)
     
