@@ -267,6 +267,68 @@ function sendData(data, algo, algoType, epsOrK, minPts) {
     });
 }
 
+    let current_x_max = 0;
+    let current_y_max = 0;
+    
+    
+    if (data) {
+      
+  for (let x_index = 0; x_index < data.length; x_index++) {
+    if (data[x_index][0] > current_x_max) {
+      current_x_max = data[x_index][0];
+    }
+
+    if (data[x_index][1] > current_y_max) {
+      current_y_max = data[x_index][1];
+    }
+  }
+      
+      
+}
+    
+    function render_d3(data,max_x, max_y){
+      
+      d3.select("#chart").selectAll("*").remove();
+      
+      
+      var svg = d3.select("#chart");
+      var width_svg = +svg.attr("width");
+      var height_svg = +svg.attr("height");
+      
+      
+      var padding = 50;
+      
+      var x = d3.scaleLinear().domain([0,max_x]).range([padding,width_svg - padding]);
+      
+      var y = d3.scaleLinear().domain([0,max_y]).range([height_svg - padding , padding]);
+      
+      
+      var xAxis = d3.axisBottom(x);
+      var yAxis = d3.axisLeft(y);
+      
+      
+      svg.append("g").attr("transform",`translate(0,${height_svg-padding})`).call(xAxis);
+      
+ svg.append("g").attr("transform",`translate(${padding},0)`).call(yAxis);
+      
+      
+svg.append("text")
+    .attr("transform", `translate(${width_svg / 2}, ${height_svg - 10})`)
+    .style("text-anchor", "middle")
+    .text("X Axis");
+  
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 15)
+    .attr("x", -(height_svg / 2))
+    .style("text-anchor", "middle")
+    .text("Y Axis");
+      
+      
+      
+          
+    }
+    
       
     
     
