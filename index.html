@@ -6,8 +6,6 @@
   <link rel="icon" type="image/x-icon" href="https://www.creativefabrica.com/wp-content/uploads/2021/07/02/Cluster-Analysis-Filled-Line-Icon-Graphics-14152745-1.jpg">
   <title>D3.js Boilerplate with Select2</title>
 
-  
-  
   <!-- jQuery is required by Select2 -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -16,11 +14,10 @@
     rel="stylesheet"
   />
   
-  
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
 
   <style>
-    
     #sidebar{
       position: fixed;
       top: 0;
@@ -35,325 +32,256 @@
       padding-left: 25px;
       padding-bottom: 25px;
       margin: 0;
-      
+      z-index: 10000;
     }
-    
     #sidebar.open {
       transform: translateX(0%);
     }
-    
-    
-    
     body {
       font-family: sans-serif;
       overflow-x: hidden;
+      margin: 0;
     }
-
     .chart-container {
       width: 100%;
       height: 500px;
       display: flex;
       justify-content: center;
     }
-
     svg {
       background-color: #f9f9f9;
       border: 1px solid #ccc;
+      width: 90%;
+      height: 500px;
     }
-
-    .select-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      column-gap: 10px;
-      margin-top: 20px;
-    }
-
-    
     #Select_button:hover {
       cursor: pointer;
     }
-    
-    
-    #algo-select, #algo-type-select  {
+    #algo-select, #algo-type-select {
       width: 200px;
     }
   </style>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 
 <body>
   <div style="display: flex; justify-content: flex-end;"> 
-    
-    <div style="background-color: green; width: 100px; height: 30px; text-align: center; padding-top:10px; border:2px black solid; color: white;  z-index: 1000;" id="Select_button">
+    <div 
+      style="background-color: green; width: 100px; height: 30px; text-align: center; padding-top:10px; border:2px black solid; color: white;  z-index: 1000;" 
+      id="Select_button"
+    >
       <b>⚙ Settings </b>
     </div>
   </div>
-  <div>
+
   <h2 style="text-align: center;">ClusterUI</h2>
-</div>
+
   <div class="chart-container">
-    <svg id="chart" width="100%"></svg>
+    <svg id="chart"></svg>
   </div>
-  
-  
-  
 
   <div style="display:flex; flex-direction:column; gap: 20px;" id="sidebar">
     <select id="algo-select">
       <option value="KM">K-Means</option>
       <option value="DB">DBSCAN</option>
     </select>
-    
-    
+
     <select id="algo-type-select">
       <option value="Self-made"><b>Self-Made</b></option>
       <option value="CPU"><b>CPU</b></option>
       <option value="GPU"><b>GPU</b></option>
     </select>
-    
+
     <div>
-      
-    
-      
-     
-      
       <b>Epsilon:  </b>
-    <input type="range" id="slider" min="0" max="100" value="50" />
-    <span id="sliderVal"> 50 </span>
+      <input type="range" id="slider" min="0" max="100" value="50" />
+      <span id="sliderVal">50</span>
     </div>
-    
+
     <div>
-      <b> MinPts: </b>
-      <input type="text" value="3" id="minPts"> </input>
+      <b>MinPts: </b>
+      <input type="text" value="3" id="minPts" />
     </div>
+
     <div style="display:flex; flex-direction:row; gap:10px;">
       <b>File: </b>
-    <input type="file" accept=".json" id="filer">   
-  </div>
-  <div>
-    <b>Manual Input (Array format): </b>
-    <input type="text" id="manual_input"> </input>
-    
-  </div>
-  <div>
-    <button id="submission" type="submit"> Submit </button>
-  </div>
+      <input type="file" accept=".json" id="filer" />
+    </div>
+
+    <div>
+      <b>Manual Input (Array format): </b>
+      <input type="text" id="manual_input" placeholder='e.g. [1,2];[3,4]' />
+    </div>
+
+    <div>
+      <button id="submission" type="submit">Submit</button>
+    </div>
   </div>
 
   <script>
-   
-   $(document).ready(function () {
-  $('#algo-select').select2({
-    minimumResultsForSearch: Infinity, 
-  });
-
-  $('#algo-type-select').select2({
-    minimumResultsForSearch: Infinity, 
-  });
-
-});
-    
-     
-    
-    
-    const slider_1 = document.getElementById("slider");
-    
-    const slider_2 = document.getElementById("sliderVal");
-    
-    const button_1 = document.getElementById("Select_button");
-    
-    button_1.addEventListener("click",(event) => {
-      
-      if(button_1.style.backgroundColor === "rgb(255, 71, 76)"){
-        
-         button_1.style.backgroundColor = "green";
-        
-          sidebar.classList.toggle('open');
-        
-         }
-      else{
-        button_1.style.backgroundColor = "green";
-        sidebar.classList.toggle('open');
-      }
-      
-      
+    // Initialize Select2
+    $(document).ready(function () {
+      $('#algo-select').select2({ minimumResultsForSearch: Infinity });
+      $('#algo-type-select').select2({ minimumResultsForSearch: Infinity });
     });
-    
-    
-    slider_1.addEventListener("change", function(event) {
-      
-  slider_2.innerHTML = slider_1.value;
-});
+
+    const slider_1 = document.getElementById("slider");
+    const slider_2 = document.getElementById("sliderVal");
+    const button_1 = document.getElementById("Select_button");
+    const sidebar = document.getElementById("sidebar");
+
+    // Sidebar toggle button
+    button_1.addEventListener("click", () => {
+      sidebar.classList.toggle('open');
+      if (sidebar.classList.contains('open')) {
+        button_1.style.backgroundColor = "rgb(255, 71, 76)";
+      } else {
+        button_1.style.backgroundColor = "green";
+      }
+    });
+
+    // Slider value display
+    slider_1.addEventListener("input", () => {
+      slider_2.textContent = slider_1.value;
+    });
+
     const submit_button = document.getElementById("submission");
 
-submit_button.addEventListener("click", () => {
-  const algo = document.getElementById("algo-select").value;
-  const algoType = document.getElementById("algo-type-select").value;
-  const epsOrK = Number(slider.value);
-  const minPts = Number(document.getElementById("minPts").value);
-  const fileInput = document.getElementById("filer");
-  const manualInputFile = document.getElementById("manual_input");
+    const clusterColors = d3.schemeCategory10;
 
-  let text_value = null;
+    submit_button.addEventListener("click", () => {
+      const algo = document.getElementById("algo-select").value;
+      const algoType = document.getElementById("algo-type-select").value;
+      const epsOrK = Number(slider_1.value);
+      const minPts = Number(document.getElementById("minPts").value);
+      const fileInput = document.getElementById("filer");
+      const manualInputFile = document.getElementById("manual_input");
 
-  const manualText = manualInputFile.value.trim();
-  const hasFile = fileInput.files.length > 0;
-  const hasManual = manualText.length > 0;
+      const manualText = manualInputFile.value.trim();
+      const hasFile = fileInput.files.length > 0;
+      const hasManual = manualText.length > 0;
 
-  if (!hasFile && !hasManual) {
-    alert("Please select a JSON file or provide manual input.");
-    return;
-  }
-
-  if (hasManual && !hasFile) {
-    try {
-      text_value = manualText.split(";").map(s => JSON.parse(s.trim()));
-      sendData(text_value, algo, algoType, epsOrK, minPts);
-    } catch (e) {
-      alert("Invalid manual input format. Use format like: [1,2];[3,4]");
-      console.error(e);
-    }
-    return;
-  }
-
-  if (hasFile) {
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-        sendData(data, algo, algoType, epsOrK, minPts);
-      } catch (err) {
-        alert("Invalid JSON file.");
-        console.error(err);
+      if (!hasFile && !hasManual) {
+        alert("Please select a JSON file or provide manual input.");
+        return;
       }
-    };
 
-    reader.onerror = (err) => {
-      alert("Error reading file.");
-      console.error(err);
-    };
+      if (hasManual && !hasFile) {
+        try {
+          // Manual input format: [1,2];[3,4]
+          const text_value = manualText.split(";").map(s => JSON.parse(s.trim()));
+          sendData(text_value, algo, algoType, epsOrK, minPts);
+        } catch (e) {
+          alert("Invalid manual input format. Use format like: [1,2];[3,4]");
+          console.error(e);
+        }
+        return;
+      }
 
-    reader.readAsText(file);
-  }
-});
+      if (hasFile) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
 
-function sendData(data, algo, algoType, epsOrK, minPts) {
-  const payload =
-    algo === "KM"
-      ? { data, k: minPts, mode: algoType }
-      : { data, eps: epsOrK, min_samples: minPts, mode: algoType };
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            sendData(data, algo, algoType, epsOrK, minPts);
+          } catch (err) {
+            alert("Invalid JSON file.");
+            console.error(err);
+          }
+        };
 
-  const url =
-    algo === "KM"
-      ? "https://baas-4ged.onrender.com/clustering/kmeans"
-      : "https://baas-4ged.onrender.com/clustering/dbscan";
+        reader.onerror = (err) => {
+          alert("Error reading file.");
+          console.error(err);
+        };
 
-  fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  })
-    .then((res) => res.json())
-    .then((result) => {
-      console.log("Response:", result);
-
-
-    })
-    .catch((err) => {
-      console.error("Fetch error:", err);
-      alert("Error sending request.");
+        reader.readAsText(file);
+      }
     });
-}
 
-    let current_x_max = 0;
-    let current_y_max = 0;
-    
-    
-    if (data) {
-      
-  for (let x_index = 0; x_index < data.length; x_index++) {
-    if (data[x_index][0] > current_x_max) {
-      current_x_max = data[x_index][0];
+    function sendData(data, algo, algoType, epsOrK, minPts) {
+      const payload = algo === "KM"
+        ? { data, k: minPts, mode: algoType }
+        : { data, eps: epsOrK, min_samples: minPts, mode: algoType };
+
+      const url = algo === "KM"
+        ? "https://baas-4ged.onrender.com/clustering/kmeans"
+        : "https://baas-4ged.onrender.com/clustering/dbscan";
+
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then(res => res.json())
+        .then(result => {
+          console.log("Response:", result);
+
+          // Find max x and y for scales
+          const max_x = d3.max(result, d => d.coords[0]);
+          const max_y = d3.max(result, d => d.coords[1]);
+
+          render_d3(result, max_x, max_y);
+        })
+        .catch(err => {
+          console.error("Fetch error:", err);
+          alert("Error sending request.");
+        });
     }
 
-    if (data[x_index][1] > current_y_max) {
-      current_y_max = data[x_index][1];
-    }
-  }
-
-
-      render_d3(result,current_x_max,current_y_max);
-      
-      
-}
-    
-    function render_d3(data,max_x, max_y){
-      
+    function render_d3(data, max_x, max_y) {
       d3.select("#chart").selectAll("*").remove();
-      
-      
-      var svg = d3.select("#chart");
-      var width_svg = +svg.attr("width");
-      var height_svg = +svg.attr("height");
-      
-      
-      var padding = 50;
-      
-      var x = d3.scaleLinear().domain([0,max_x]).range([padding,width_svg - padding]);
-      
-      var y = d3.scaleLinear().domain([0,max_y]).range([height_svg - padding , padding]);
-      
-      
-      var xAxis = d3.axisBottom(x);
-      var yAxis = d3.axisLeft(y);
-      
-      
-      svg.append("g").attr("transform",`translate(0,${height_svg-padding})`).call(xAxis);
-      
- svg.append("g").attr("transform",`translate(${padding},0)`).call(yAxis);
-      
-      
-svg.append("text")
-    .attr("transform", `translate(${width_svg / 2}, ${height_svg - 10})`)
-    .style("text-anchor", "middle")
-    .text("X Axis");
-  
-  svg.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 15)
-    .attr("x", -(height_svg / 2))
-    .style("text-anchor", "middle")
-    .text("Y Axis");
 
-  // Draw points
-  svg.selectAll("circle")
-    .data(clusteredData)
-    .enter()
-    .append("circle")
-    .attr("cx", d => xScale(d.coords[0]))
-    .attr("cy", d => yScale(d.coords[1]))
-    .attr("r", 5)
-    .attr("fill", d => {
-      if (d.cluster === -1 || d.cluster === "noise") return "#999"; // noise gray
-      return clusterColors[d.cluster % clusterColors.length];
-    })
-    .attr("stroke", "#333")
-    .attr("stroke-width", 1)
-    .attr("opacity", 0.8)
-    .append("title")
-    .text(d => `Cluster: ${d.cluster}\n(${d.coords[0]}, ${d.coords[1]})`);
-      
-      
-      
-          
+      const svg = d3.select("#chart");
+      const width_svg = svg.node().clientWidth;
+      const height_svg = svg.node().clientHeight;
+
+      const padding = 50;
+
+      const xScale = d3.scaleLinear().domain([0, max_x]).range([padding, width_svg - padding]);
+      const yScale = d3.scaleLinear().domain([0, max_y]).range([height_svg - padding, padding]);
+
+      const xAxis = d3.axisBottom(xScale);
+      const yAxis = d3.axisLeft(yScale);
+
+      svg.append("g")
+        .attr("transform", `translate(0,${height_svg - padding})`)
+        .call(xAxis);
+
+      svg.append("g")
+        .attr("transform", `translate(${padding},0)`)
+        .call(yAxis);
+
+      svg.append("text")
+        .attr("transform", `translate(${width_svg / 2}, ${height_svg - 10})`)
+        .style("text-anchor", "middle")
+        .text("X Axis");
+
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 15)
+        .attr("x", -(height_svg / 2))
+        .style("text-anchor", "middle")
+        .text("Y Axis");
+
+      svg.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => xScale(d.coords[0]))
+        .attr("cy", d => yScale(d.coords[1]))
+        .attr("r", 5)
+        .attr("fill", d => {
+          if (d.cluster === -1 || d.cluster === "noise") return "#999"; // noise gray
+          return clusterColors[d.cluster % clusterColors.length];
+        })
+        .attr("stroke", "#333")
+        .attr("stroke-width", 1)
+        .attr("opacity", 0.8)
+        .append("title")
+        .text(d => `Cluster: ${d.cluster}\n(${d.coords[0]}, ${d.coords[1]})`);
     }
-    
-      
-    
-    
   </script>
 </body>
 </html>
