@@ -259,7 +259,8 @@ function sendData(data, algo, algoType, epsOrK, minPts) {
     .then((res) => res.json())
     .then((result) => {
       console.log("Response:", result);
-      // You can call a render function here if needed
+
+
     })
     .catch((err) => {
       console.error("Fetch error:", err);
@@ -282,6 +283,9 @@ function sendData(data, algo, algoType, epsOrK, minPts) {
       current_y_max = data[x_index][1];
     }
   }
+
+
+      render_d3(result,current_x_max,current_y_max);
       
       
 }
