@@ -323,6 +323,24 @@ svg.append("text")
     .attr("x", -(height_svg / 2))
     .style("text-anchor", "middle")
     .text("Y Axis");
+
+  // Draw points
+  svg.selectAll("circle")
+    .data(clusteredData)
+    .enter()
+    .append("circle")
+    .attr("cx", d => xScale(d.coords[0]))
+    .attr("cy", d => yScale(d.coords[1]))
+    .attr("r", 5)
+    .attr("fill", d => {
+      if (d.cluster === -1 || d.cluster === "noise") return "#999"; // noise gray
+      return clusterColors[d.cluster % clusterColors.length];
+    })
+    .attr("stroke", "#333")
+    .attr("stroke-width", 1)
+    .attr("opacity", 0.8)
+    .append("title")
+    .text(d => `Cluster: ${d.cluster}\n(${d.coords[0]}, ${d.coords[1]})`);
       
       
       
