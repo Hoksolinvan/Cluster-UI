@@ -1,6 +1,7 @@
 def DBSCAN(content, eps=0.5, min_samples=5):
-    visited = [0] * len(content)  # 0: unvisited, 1: visited, -1: noise
-    clusters = []
+    visited = [0] * len(content)  
+    labels = [-1] * len(content)  # -1: noise
+    cluster_id = 0
 
     def get_neighbors(index):
         neighbors = []
@@ -12,31 +13,36 @@ def DBSCAN(content, eps=0.5, min_samples=5):
         return neighbors
 
     for i in range(len(content)):
-        if visited[i] != 0:
+        if visited[i]:
             continue
-
         visited[i] = 1
         neighbors = get_neighbors(i)
 
         if len(neighbors) < min_samples:
-            visited[i] = -1  # Mark as noise
+            labels[i] = -1
         else:
-            cluster = [i]
-            queue = list(neighbors)
-
+            labels[i] = cluster_id
+            queue = neighbors[:]
             while queue:
                 j = queue.pop()
-                if visited[j] == 0:
+                if not visited[j]:
                     visited[j] = 1
                     j_neighbors = get_neighbors(j)
                     if len(j_neighbors) >= min_samples:
                         queue.extend(j_neighbors)
-                if all(j not in c for c in clusters):  # Avoid adding duplicates
-                    cluster.append(j)
+                if labels[j] == -1:
+                    labels[j] = cluster_id
+            cluster_id += 1
 
-            clusters.append(cluster)
+    # Group points by cluster
+    clusters = {}
+    for idx, label in enumerate(labels):
+        if label == -1:
+            continue  # Skip noise
+        clusters.setdefault(label, []).append(content[idx])
 
-    return clusters
+    return list(clusters.values())  # List of clusters, each is list of [x, y]
+
 
 
 def KMeans(content, k=3, max_iterations=100):
@@ -72,12 +78,13 @@ def Sci_kitDBSCAN(content, eps=0.5, min_samples=5):
     dbscan = DBSCAN(eps=eps, min_samples=min_samples)
     labels = dbscan.fit_predict(content_np)
 
-    clusters = []
-    for label in set(labels):
-        if label != -1:  # Ignore noise points
-            clusters.append(np.where(labels == label)[0].tolist())
+    clusters = {}
+    for index, label in enumerate(labels):
+        if label == -1:
+            continue  # skip noise
+        clusters.setdefault(label, []).append(content[index])
 
-    return clusters
+    return list(clusters.values())
 
 def Sci_kitKMeans(content, k=3, max_iterations=100):
     from sklearn.cluster import KMeans
@@ -99,14 +106,15 @@ def CUML_DBSCAN(content, eps=0.5, min_samples=5):
 
     content_np = np.array(content)
     dbscan = CumlDBSCAN(eps=eps, min_samples=min_samples)
-    labels = dbscan.fit_predict(content_np)
+    labels = dbscan.fit_predict(content_np).to_array()  
 
-    clusters = []
-    for label in set(labels):
-        if label != -1:  # Ignore noise points
-            clusters.append(np.where(labels == label)[0].tolist())
+    clusters = {}
+    for index, label in enumerate(labels):
+        if label == -1:
+            continue
+        clusters.setdefault(label, []).append(content[index])
 
-    return clusters
+    return list(clusters.values())
 
 def CUML_KMeans(content, k=3, max_iterations=100):
     from cuml.cluster import KMeans as CumlKMeans
