@@ -219,8 +219,31 @@
           console.log("Response:", result);
 
           // Find max x and y for scales
-          const max_x = d3.max(result, d => d.coords[0]);
-          const max_y = d3.max(result, d => d.coords[1]);
+          let max_x = 0;
+          let max_y = 0;
+
+
+          for(let i = 0; i < data.length; i++){
+
+            let current = data[i][0];
+            if (current > max_x){
+              max_x = current;
+            }
+            
+            
+          }
+
+
+          for(let j = 0; j < data.length; j++){
+
+            let current = data[j][1];
+            if (current > max_y){
+                max_y = current;
+            }
+
+
+          }
+          
 
           render_d3(result, max_x, max_y);
         })
