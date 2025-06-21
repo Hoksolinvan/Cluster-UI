@@ -219,33 +219,21 @@
           console.log("Response:", result);
 
           // Find max x and y for scales
-          let max_x = 0;
-          let max_y = 0;
+           const flattened = [];
+  for (let i = 0; i < result.length; i++) {
+    for (let j = 0; j < result[i].length; j++) {
+      flattened.push({
+        coords: result[i][j],
+        cluster: i
+      });
+    }
+  }
 
+  const max_x = d3.max(flattened, d => d.coords[0]);
+  const max_y = d3.max(flattened, d => d.coords[1]);
 
-          for(let i = 0; i < data.length; i++){
+            render_d3(flattened, max_x, max_y);
 
-            let current = data[i][0];
-            if (current > max_x){
-              max_x = current;
-            }
-            
-            
-          }
-
-
-          for(let j = 0; j < data.length; j++){
-
-            let current = data[j][1];
-            if (current > max_y){
-                max_y = current;
-            }
-
-
-          }
-          
-
-          render_d3(result, max_x, max_y);
         })
         .catch(err => {
           console.error("Fetch error:", err);
