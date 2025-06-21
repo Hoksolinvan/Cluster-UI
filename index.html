@@ -282,12 +282,11 @@
   .append("circle")
   .attr("cx", d => xScale(d.coords[0]))
   .attr("cy", d => yScale(d.coords[1]))
-  .attr("r", 5)
+  .attr("r", 20)
   .attr("fill", d => {
-    if (d.cluster === -1 || d.cluster === "noise") return "#999"; // noise gray
     return clusterColors[d.cluster % clusterColors.length];
   })
-  .attr("stroke", "#333")
+  .attr("stroke", "black")
   .attr("stroke-width", 1)
   .attr("opacity", 0.8);
 
