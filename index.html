@@ -258,25 +258,25 @@
       const xAxis = d3.axisBottom(xScale);
       const yAxis = d3.axisLeft(yScale);
 
-      // svg.append("g")
-      //   .attr("transform", `translate(0,${height_svg - padding})`)
-      //   .call(xAxis);
+      svg.append("g")
+        .attr("transform", `translate(0,${height_svg - padding})`)
+        .call(xAxis);
 
-      // svg.append("g")
-      //   .attr("transform", `translate(${padding},0)`)
-      //   .call(yAxis);
+      svg.append("g")
+        .attr("transform", `translate(${padding},0)`)
+        .call(yAxis);
 
-      // svg.append("text")
-      //   .attr("transform", `translate(${width_svg / 2}, ${height_svg - 10})`)
-      //   .style("text-anchor", "middle")
-      //   .text("X Axis");
+      svg.append("text")
+        .attr("transform", `translate(${width_svg / 2}, ${height_svg - 10})`)
+        .style("text-anchor", "middle")
+        .text("X Axis");
 
-      // svg.append("text")
-      //   .attr("transform", "rotate(-90)")
-      //   .attr("y", 15)
-      //   .attr("x", -(height_svg / 2))
-      //   .style("text-anchor", "middle")
-      //   .text("Y Axis");
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 15)
+        .attr("x", -(height_svg / 2))
+        .style("text-anchor", "middle")
+        .text("Y Axis");
 
       const circles = svg.selectAll("circle")
   .data(data)
