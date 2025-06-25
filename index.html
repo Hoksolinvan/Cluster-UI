@@ -223,10 +223,12 @@
 
     const rawCluster = algo==="KM" ? result.clusters : result;
   for (let i = 0; i < rawCluster.length; i++) {
+
+    let colors = d3.hsl(Math.random() * 360, 0.6, 0.5).toString();
     for (let j = 0; j < rawCluster[i].length; j++) {
       flattened.push({
         coords: rawCluster[i][j],
-        cluster: i
+        cluster: colors
       });
     }
   }
@@ -286,7 +288,7 @@
   .attr("cy", d => yScale(d.coords[1]))
   .attr("r", 5)
   .attr("fill", d => {
-    return d3.rgb(d.cluster * 40, d.cluster * 40, d.cluster * 40).toString();
+    return d.cluster;
   })
   .attr("stroke", "black")
   .attr("stroke-width", 1)
