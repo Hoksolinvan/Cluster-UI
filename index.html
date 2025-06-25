@@ -220,10 +220,12 @@
 
           // Find max x and y for scales
            const flattened = [];
-  for (let i = 0; i < result.length; i++) {
-    for (let j = 0; j < result[i].length; j++) {
+
+    const rawCluster = result.clusters;
+  for (let i = 0; i < rawCluster.length; i++) {
+    for (let j = 0; j < rawCluster[i].length; j++) {
       flattened.push({
-        coords: result[i][j],
+        coords: rawCluster[i][j],
         cluster: i
       });
     }
