@@ -286,7 +286,7 @@
   .attr("cy", d => yScale(d.coords[1]))
   .attr("r", 5)
   .attr("fill", d => {
-    return clusterColors[d.cluster % clusterColors.length];
+    return d3.rgb(d.cluster * 40, d.cluster * 40, d.cluster * 40).toString();
   })
   .attr("stroke", "black")
   .attr("stroke-width", 1)
