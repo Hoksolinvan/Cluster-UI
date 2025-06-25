@@ -221,7 +221,7 @@
           // Find max x and y for scales
            const flattened = [];
 
-    const rawCluster = result.clusters;
+    const rawCluster = algo==="KM" ? result.clusters : result;
   for (let i = 0; i < rawCluster.length; i++) {
     for (let j = 0; j < rawCluster[i].length; j++) {
       flattened.push({
