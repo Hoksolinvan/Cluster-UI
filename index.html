@@ -284,7 +284,7 @@
   .append("circle")
   .attr("cx", d => xScale(d.coords[0]))
   .attr("cy", d => yScale(d.coords[1]))
-  .attr("r", 20)
+  .attr("r", 5)
   .attr("fill", d => {
     return clusterColors[d.cluster % clusterColors.length];
   })
