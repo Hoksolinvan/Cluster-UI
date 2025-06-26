@@ -224,6 +224,8 @@
 
     const rawCluster = algo==="KM" ? result.clusters : result;
 
+
+  if(algo==="KM"){
       
   for (let i = 0; i < rawCluster.length; i++) {
 
@@ -234,6 +236,29 @@
         cluster: colors
       });
     }
+  }
+
+  }
+
+  else{
+
+    for(let j = 0; j< rawCluster.length; j++){
+
+        let colors = d3.hsl(Math.random() * 360, 0.6, 0.5).toString();
+      
+        for (let k = 0; k<rawCluster[j].length; k++){
+
+            flattened.push({
+              coords: rawCluster[j][k],
+              cluster: colors
+
+            });
+
+        }
+
+
+    }
+
   }
 
     console.log(flattened);
