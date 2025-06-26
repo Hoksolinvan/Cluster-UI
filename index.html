@@ -88,7 +88,8 @@
     <select id="algo-type-select">
       <option value="Self-made"><b>Self-Made</b></option>
       <option value="CPU"><b>CPU</b></option>
-      <option value="GPU"><b>GPU</b></option>
+<!--       <option value="GPU"><b>GPU</b></option> -->
+      
     </select>
 
     <div>
@@ -222,6 +223,8 @@
            const flattened = [];
 
     const rawCluster = algo==="KM" ? result.clusters : result;
+
+      
   for (let i = 0; i < rawCluster.length; i++) {
 
     let colors = d3.hsl(Math.random() * 360, 0.6, 0.5).toString();
